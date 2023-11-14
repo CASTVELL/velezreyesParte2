@@ -1,13 +1,13 @@
 version: "3.9"
 services:
-  frontendapp:
-    build: ./frontend
-    ports:
-      - "9000:9000"
-    links:
-      - backendapp
-    depends_on:
-      - backendapp
+  #frontendapp:
+  #  build: ./frontend
+  # ports:
+  #  - "9000:9000"
+  #links:
+  # - backendapp
+  #depends_on:
+  # - backendapp
 
   backendapp:
     build: ./backend
