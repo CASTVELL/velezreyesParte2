@@ -11,11 +11,11 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
-# Expose port 5000 for the Flask app to listen on
-EXPOSE 5000
+# Expose port 3000 for the Flask app to listen on
+EXPOSE 3000
 
 # Set the environment variable for Flask to run in production mode
 ENV FLASK_ENV=production
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Run run.py when the container launches
+CMD ["python", "run.py"]
