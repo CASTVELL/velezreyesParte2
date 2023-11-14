@@ -11,6 +11,7 @@ class Query(db.Model):
     comment = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     query_data = db.Column(db.String)  # or db.Column(db.JSON)
+    comments = db.relationship('Comment', backref='query', lazy=True)
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
