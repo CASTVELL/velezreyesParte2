@@ -30,15 +30,26 @@ class Visualization(db.Model):
 
 @app.route('/query', methods=['GET', 'POST'])
 def query():
-    if request.method == 'GET':
-        queries = Query.query.all()
-        return jsonify([query.__dict__ for query in queries])
-    elif request.method == 'POST':
-        data = request.json
-        query = Query(name=data['name'], comment=data['comment'], user_id=data['user_id'], query_data=data['query_data'])
-        db.session.add(query)
-        db.session.commit()
-        return jsonify(query.__dict__)
+    """ 
+    This function handles GET and POST requests for the '/query' endpoint.
+    If the request method is GET, it returns all the queries in the database.
+    If the request method is POST, it adds a new query to the database and returns the added query.
+    """
+    try: 
+        
+        if request.method == 'GET':
+            queries = Query.query.all()
+            return jsonify([query.__dict__ for query in queries])
+        elif request.method == 'POST':
+            data = request.json
+            query = Query(name=data['name'], comment=data['comment'], user_id=data['user_id'], query_data=data['query_data'])
+            db.session.add(query)
+            db.session.commit()
+            return jsonify(query.__dict__)
+        return {"message":"/query funciona correctamente"}
+    
+    except Exception as e:
+        return {"message": f"Hay un error en el endpoint /query: {str(e)}"}
 
 @app.route('/query/<int:query_id>', methods=['GET', 'PUT', 'DELETE'])
 def query_detail(query_id):
