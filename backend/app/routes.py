@@ -1,7 +1,7 @@
 # routes.py
 from flask import request, jsonify
-from app import app, db
-from models import Query, Comment
+from backend.app.app import app, db
+from backend.app.models import Query, Comment
 
 
 @app.route('/query', methods=['GET', 'POST'])
