@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-
+from urllib.parse import quote_plus
 
 # App config
 
@@ -8,28 +8,30 @@ app = Flask(__name__)
 
 db_name = 'query_database'
 db_user = 'admin_user'
-db_pass = 'magical_password'
+db_pass = quote_plus('magical_password')
 db_host = 'dbpostgres' # este es el servicio database declarado en el docker-compose
 db_port = '5432'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{}:{}@{}:{}/{}'.format(db_user, db_pass, db_host, db_port, db_name)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
 # Models
 
-class User(db.Model):
+class AppUser(db.Model):
+    __tablename__ = 'appuser'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
     queries = db.relationship('Query', backref='user', lazy=True)
     comments = db.relationship('Comment', backref='user', lazy=True)
 
 class Query(db.Model):
+    __tablename__ = 'query'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    query_data = db.Column(db.String)  # or db.Column(db.JSON)
+    user_id = db.Column(db.Integer, db.ForeignKey(AppUser.__tablename__ + '.id'))  
+    query_data = db.Column(db.String)  
     comments = db.relationship('Comment', backref='query', lazy=True)
     @property
     def serialize(self):
@@ -41,11 +43,11 @@ class Query(db.Model):
         }
 
 class Comment(db.Model):
+    __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
     comment_text = db.Column(db.String(200))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    query_id = db.Column(db.Integer, db.ForeignKey('query.id'))
-    query = db.relationship('Query', backref='comments', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(AppUser.__tablename__ + '.id'))
+    query_id = db.Column(db.Integer, db.ForeignKey(Query.__tablename__ + '.id'))
     @property
     def serialize(self):
         return {

@@ -13,16 +13,19 @@ services:
       - "5432:5432"
     networks:
       - app-network
-    container_name: postgresql_service
+    container_name: postgresqldatabase_service
 
   backendapp:
     build: ./backend
     ports:
       - "3000:3000"
+    networks:
+      - app-network
     environment:
       - DB_HOST=dbpostgres
     depends_on:
       - dbpostgres
+    container_name: backendcrudposgresql_service
 
 networks:
   app-network:
