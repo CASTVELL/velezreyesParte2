@@ -26,7 +26,6 @@ class User(db.Model):
 class Query(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    comment = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     query_data = db.Column(db.String)  # or db.Column(db.JSON)
     comments = db.relationship('Comment', backref='query', lazy=True)
@@ -35,7 +34,6 @@ class Query(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'comment': self.comment,
             'user_id': self.user_id,
             'query_data': self.query_data
         }
@@ -45,11 +43,14 @@ class Comment(db.Model):
     comment_text = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     query_id = db.Column(db.Integer, db.ForeignKey('query.id'))
-
-class Visualization(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    query_id = db.Column(db.Integer, db.ForeignKey('query.id'))
-    visualization_data = db.Column(db.String)  # or db.Column(db.JSON)
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'comment_text': self.comment_text,
+            'user_id': self.user_id,
+            'query_id': self.query_id
+        }
 
 
 # Routes
@@ -65,24 +66,38 @@ def query():
         
         if request.method == 'GET':
             queries = Query.query.all()
-            return jsonify([query.__dict__ for query in queries])
+            return jsonify([query.serialize for query in queries])
         elif request.method == 'POST':
             data = request.json
-            query = Query(name=data['name'], comment=data['comment'], user_id=data['user_id'], query_data=data['query_data'])
+            query = Query(name=data['name'], user_id=data['user_id'], query_data=data['query_data'])
             db.session.add(query)
             db.session.commit()
-            return jsonify(query.__dict__)
+            print("entro a post")
+            print(query.serialize)
+            return jsonify(query.serialize)
     
     except Exception as e:
         return {"message": f"Hay un error en el endpoint definido por la funcion query   : {str(e)}"}
 
 @app.route('/query/<int:query_id>', methods=['GET', 'PUT', 'DELETE'])
 def query_detail(query_id):
+    """
+    Retrieves, updates or deletes a specific query by its ID.
+
+    Args:
+        query_id (int): The ID of the query to retrieve, update or delete.
+
+    Returns:
+        If the request method is GET, returns a JSON representation of the query.
+        If the request method is PUT, updates the query and returns a JSON representation of the updated query.
+        If the request method is DELETE, deletes the query and returns a 204 No Content response.
+        If an exception occurs, returns a JSON object with an error message.
+    """
     try:
 
         query = Query.query.get_or_404(query_id)
         if request.method == 'GET':
-            return jsonify(query.__dict__)
+            return jsonify(query.serialize)
         elif request.method == 'PUT':
             data = request.json
             query.name = data.get('name', query.name)
@@ -90,7 +105,7 @@ def query_detail(query_id):
             query.user_id = data.get('user_id', query.user_id)
             query.query_data = data.get('query_data', query.query_data)
             db.session.commit()
-            return jsonify(query.__dict__)
+            return jsonify(query.serialize)
         elif request.method == 'DELETE':
             db.session.delete(query)
             db.session.commit()
@@ -105,13 +120,13 @@ def comment():
 
         if request.method == 'GET':
             comments = Comment.query.all()
-            return jsonify([comment.__dict__ for comment in comments])
+            return jsonify([comment.serialize for comment in comments])
         elif request.method == 'POST':
             data = request.json
             comment = Comment(comment_text=data['comment_text'], user_id=data['user_id'], query_id=data['query_id'])
             db.session.add(comment)
             db.session.commit()
-            return jsonify(comment.__dict__)
+            return jsonify(comment.serialize)
     
     except Exception as e:
         return {"message": f"Hay un error en el endpoint definido por la funcion comment    : {str(e)}"}
@@ -122,14 +137,14 @@ def comment_detail(comment_id):
 
         comment = Comment.query.get_or_404(comment_id)
         if request.method == 'GET':
-            return jsonify(comment.__dict__)
+            return jsonify(comment.serialize)
         elif request.method == 'PUT':
             data = request.json
             comment.comment_text = data.get('comment_text', comment.comment_text)
             comment.user_id = data.get('user_id', comment.user_id)
             comment.query_id = data.get('query_id', comment.query_id)
             db.session.commit()
-            return jsonify(comment.__dict__)
+            return jsonify(comment.serialize)
         elif request.method == 'DELETE':
             db.session.delete(comment)
             db.session.commit()
