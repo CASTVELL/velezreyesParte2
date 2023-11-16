@@ -1,4 +1,4 @@
-CREATE TABLE user (
+CREATE TABLE appuser (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE
 );
