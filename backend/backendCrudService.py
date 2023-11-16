@@ -127,7 +127,7 @@ def comment():
     try:
 
         if request.method == 'GET':
-            comments = Comment.query.all()
+            comments = db.session.query(Comment).all()
             return jsonify([comment.serialize for comment in comments])
         elif request.method == 'POST':
             data = request.json
@@ -141,9 +141,21 @@ def comment():
 
 @app.route('/comment/<int:comment_id>', methods=['GET', 'PUT', 'DELETE'])
 def comment_detail(comment_id):
+    """
+    Retrieves, updates or deletes a specific comment by its ID.
+
+    Args:
+        comment_id (int): The ID of the comment to retrieve, update or delete.
+
+    Returns:
+        If the request method is GET, returns a JSON representation of the comment.
+        If the request method is PUT, updates the comment and returns a JSON representation of the updated comment.
+        If the request method is DELETE, deletes the comment and returns a 204 No Content response.
+        If an exception occurs, returns a JSON object with an error message.
+    """
     try:
 
-        comment = Comment.query.get_or_404(comment_id)
+        comment = db.session.query(Comment).filter_by(id=comment_id).first()
         if request.method == 'GET':
             return jsonify(comment.serialize)
         elif request.method == 'PUT':
