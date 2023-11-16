@@ -120,6 +120,10 @@ def query_detail(query_id):
 
 @app.route('/comment', methods=['GET', 'POST'])
 def comment():
+    """
+    GET: Returns a list of all comments.
+    POST: Adds a new comment to the database.
+    """
     try:
 
         if request.method == 'GET':
