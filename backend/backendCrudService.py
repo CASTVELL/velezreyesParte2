@@ -106,7 +106,6 @@ def query_detail(query_id):
         elif request.method == 'PUT':
             data = request.json
             query.name = data.get('name', query.name)
-            query.comment = data.get('comment', query.comment)
             query.user_id = data.get('user_id', query.user_id)
             query.query_data = data.get('query_data', query.query_data)
             db.session.commit()
