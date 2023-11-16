@@ -1,21 +1,18 @@
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True)
+CREATE TABLE user (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE
+);
 
-class Query(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    comment = db.Column(db.String(200))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    query_data = db.Column(db.String)  # or db.Column(db.JSON)
+CREATE TABLE query (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50),
+    user_id INTEGER REFERENCES user(id),
+    query_data VARCHAR
+);
 
-class Comment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    comment_text = db.Column(db.String(200))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    query_id = db.Column(db.Integer, db.ForeignKey('query.id'))
-
-class Visualization(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    query_id = db.Column(db.Integer, db.ForeignKey('query.id'))
-    visualization_data = db.Column(db.String)  # or db.Column(db.JSON)
+CREATE TABLE comment (
+    id SERIAL PRIMARY KEY,
+    comment_text VARCHAR(200),
+    user_id INTEGER REFERENCES user(id),
+    query_id INTEGER REFERENCES query(id)
+);

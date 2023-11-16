@@ -1,4 +1,5 @@
 version: "3"
+
 services:
 
   dbpostgres:
@@ -9,7 +10,7 @@ services:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./database/database.env
     ports:
-      - "532:5432"
+      - "5432:5432"
     networks:
       - app-network
     container_name: postgresql_service
@@ -22,6 +23,10 @@ services:
       - DB_HOST=dbpostgres
     depends_on:
       - dbpostgres
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   database-data:

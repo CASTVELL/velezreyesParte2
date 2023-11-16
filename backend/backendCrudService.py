@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-db_name = 'rainbow_database'
-db_user = 'unicorn_user'
+db_name = 'query_database'
+db_user = 'admin_user'
 db_pass = 'magical_password'
 db_host = 'dbpostgres' # este es el servicio database declarado en el docker-compose
 db_port = '5432'
@@ -22,6 +22,8 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
+    queries = db.relationship('Query', backref='user', lazy=True)
+    comments = db.relationship('Comment', backref='user', lazy=True)
 
 class Query(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,6 +45,7 @@ class Comment(db.Model):
     comment_text = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     query_id = db.Column(db.Integer, db.ForeignKey('query.id'))
+    query = db.relationship('Query', backref='comments', lazy=True)
     @property
     def serialize(self):
         return {
