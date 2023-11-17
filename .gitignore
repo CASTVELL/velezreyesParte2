@@ -1,3 +1,9 @@
 /backend/venv/
 /backend/transformerservice.py
+
+
 /database/database.env
+
+
+/frontend/node_modules
+/frontend/build
