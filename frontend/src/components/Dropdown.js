@@ -1,4 +1,3 @@
-// components/Dropdown.js
 import React from 'react';
 
 function Dropdown({ label, options, selectedOption, handleDropdownChange }) {

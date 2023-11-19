@@ -1,10 +1,10 @@
 // components/SubmitButton.js
 import React from 'react';
 
-function SubmitButton({ label, handleSubmit }) {
+function SubmitButton({ label, handleSubmit, nombre }) {
     return (
         <div>
-            <button onClick={handleSubmit}>{label}</button>
+            <button name={nombre} onClick={handleSubmit}>{label}</button>
         </div>
     );
 }
