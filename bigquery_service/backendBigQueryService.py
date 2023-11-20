@@ -34,11 +34,12 @@ for row in query_job:
 
 @app.route('/query', methods=['GET'])
 def execute_query():
-    """
-    Executes a query job and returns the results as a JSON response.
-
-    Returns:
-        A JSON response containing the query results.
+    query = """
+        SELECT Ave_Number_of_Prenatal_Wks, SUM(Births) AS Total_Births
+        FROM `bigquery-public-data.sdoh_cdc_wonder_natality.county_natality_by_payment`
+        WHERE Source_of_Payment = 'Private Insurance' AND EXTRACT(YEAR FROM Year) = 2017
+        GROUP BY Ave_Number_of_Prenatal_Wks
+        ORDER BY Ave_Number_of_Prenatal_Wks;
     """
     query_job = client.query(query)  
     results = []
@@ -46,6 +47,20 @@ def execute_query():
         results.append(dict(row))
     response = {"results": results}
     return jsonify(response)
+
+@app.route('/getPayment', methods=['GET'])
+def get_Payment():
+    query = """
+        SELECT DISTINCT Source_of_Payment
+        FROM `bigquery-public-data.sdoh_cdc_wonder_natality.county_natality_by_payment`;
+    """
+    query_job = client.query(query)  
+    results = []
+    for row in query_job:
+        results.append(dict(row))
+    response = {"results": results}
+    return jsonify(query_job)
+
 
 if __name__ == '__main__':
     app.run(port=3001)

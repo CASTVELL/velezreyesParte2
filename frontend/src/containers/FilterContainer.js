@@ -10,16 +10,13 @@ import { fetchData } from '../api/apiBigQuery/apiBigQuery';
 import { fetchDataFromBackend } from '../api/apiBigQuery/apiBigQuery';
 
 function FilterContainer() {
-    const [isAbnormalitiesChecked, setAbnormalitiesChecked] = useState(false);
+
     const [selectedPaymentSource, setSelectedPaymentSource] = useState('');
-    const [selectedAbnormalCondition, setSelectedAbnormalCondition] = useState('');
+    const [selectedYear, setSelectedYear] = useState('');
     const [selectedMorbidity, setSelectedMorbidity] = useState('');
     const [year, setYear] = useState('');
 
-    const handleCheckboxChange = (event) => {
-        setAbnormalitiesChecked(event.target.checked);
-        alert(`Checkbox is ${event.target.checked ? 'checked' : 'not checked'}`);
-    };
+
 
     const handlePaymentSourceChange = (event) => {
         setSelectedPaymentSource(event.target.value);
@@ -27,7 +24,7 @@ function FilterContainer() {
     };
 
     const handleAbnormalConditionChange = (event) => {
-        setSelectedAbnormalCondition(event.target.value);
+        setSelectedYear(event.target.value);
         alert(`Option selected: ${event.target.value}`);
     };
 
@@ -47,14 +44,25 @@ function FilterContainer() {
 
 
     // Define your options for each dropdown
-    const paymentSourceOptions = ['Option 1', 'Option 2', 'Option 3'];
-    const abnormalConditionOptions = ['Option 1', 'Option 2', 'Option 3'];
-    const morbidityOptions = ['Option 1', 'Option 2', 'Option 3'];
+    const paymentSourceOptions = ['Any', 'Other', 'Medicaid', 'Self Pay', 'Private Insurance', 'Unknown or Not Stated'];
+    const yearOptions = ['Any', '2016', '2017', '2018'];
+    const searchOptions = ['Ave_Age_of_Mother', 'Ave_Pre_pregnancy_BMI', 'Ave_OE_Gestational_Age_Wks', 'Ave_Birth_Weight_gms', 'Ave_Number_of_Prenatal_Wks', 'Ave_LMP_Gestational_Age_Wks'];
+
+
+
 
     return (
 
         <div>
             <div className="FilterContainer">
+
+
+                <div className="Row">
+
+                    <label className="label">Select Morbidity:</label>
+                    <Dropdown options={searchOptionsOptions} selectedOption={selectedMorbidity} handleDropdownChange={handleMorbidityChange} className="filterElement" />
+
+                </div>
                 <div className="Row">
 
                     <label className="label">Select Payment Source:</label>
@@ -63,28 +71,11 @@ function FilterContainer() {
                 </div>
                 <div className="Row">
 
-                    <label className="label">Select Abnormal Condition:</label>
-                    <Dropdown options={abnormalConditionOptions} selectedOption={selectedAbnormalCondition} handleDropdownChange={handleAbnormalConditionChange} className="filterElement" />
+                    <label className="label">Select Year:</label>
+                    <Dropdown options={yearOptions} selectedOption={selectedYear} handleDropdownChange={handleAbnormalConditionChange} className="filterElement" />
 
                 </div>
-                <div className="Row">
 
-                    <label className="label">Select Morbidity:</label>
-                    <Dropdown options={morbidityOptions} selectedOption={selectedMorbidity} handleDropdownChange={handleMorbidityChange} className="filterElement" />
-
-                </div>
-                <div className="Row">
-
-                    <label className="label">Enter Year:</label>
-                    <Textbox value={year} handleTextboxChange={handleYearChange} className="filterElement" />
-
-                </div>
-                <div className="Row">
-
-                    <label className="label">Is Abnormalities Checked:</label>
-                    <input type="checkbox" checked={isAbnormalitiesChecked} onChange={handleCheckboxChange} />
-
-                </div>
 
             </div>
             <div className="ButtonContainer">
