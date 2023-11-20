@@ -7,6 +7,7 @@ import SubmitButton from '../components/SubmitButton';
 import './FilterContainer.css';
 
 import { fetchData } from '../api/apiBigQuery/apiBigQuery';
+import { fetchDataFromBackend } from '../api/apiBigQuery/apiBigQuery';
 
 function FilterContainer() {
     const [isAbnormalitiesChecked, setAbnormalitiesChecked] = useState(false);
@@ -39,14 +40,9 @@ function FilterContainer() {
         setYear(event.target.value);
     };
 
+
     const handleSubmit = async () => {
-        const query = 'SELECT * FROM my_table'; // Replace with your actual query
-        try {
-            const data = await fetchData(query);
-            alert(JSON.stringify(data));
-        } catch (error) {
-            alert(`Error: ${error.message}`);
-        }
+        await fetchDataFromBackend();
     };
 
 

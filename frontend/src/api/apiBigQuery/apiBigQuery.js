@@ -1,30 +1,15 @@
-// api.js
-import { BigQuery } from '@google-cloud/bigquery';
-import path from 'path-browserify';
 
-// Initialize BigQuery client
-const bigquery = new BigQuery({
-    keyFilename: path.join(__dirname, '../../velezreyes-897d5faa1790.json'),
-});
-
-// Function to fetch data from BigQuery
-export async function fetchData(query) {
+// Function to make a request to the backend endpoint
+export async function fetchDataFromBackend() {
     try {
-        // Create a job
-        const [job] = await bigquery.createQueryJob({ query });
-
-        // Get query results
-        const [rows] = await job.getQueryResults();
-
-        // Perform basic data quality checks
-        if (!rows || rows.length === 0) {
-            throw new Error('No data returned from query');
-        }
-
-        // Return the data
-        return rows;
+        const response = await fetch("http://localhost:3001/query");
+        const data = await response.json();
+        console.log(data); // Do something with the response data
+        alert("Data fetched from backend!" + data);
     } catch (error) {
-        console.error('Error fetching data from BigQuery', error);
-        throw error;
+        console.error("Error fetching data from backend:", error);
     }
 }
+
+// Call the function to fetch data from the backend
+fetchDataFromBackend();
