@@ -17,7 +17,7 @@ function GraphContainer({ filterValues }) {
     return (
         <div>
             <div className="ButtonContainer">
-                <SubmitButton label="Buscar" handleSubmit={handleSubmit} />
+                <SubmitButton label="Show Data" handleSubmit={handleSubmit} />
             </div>
             <div className="GraphContainer">
                 {showGraph && <BarGraph data={graphData} />}

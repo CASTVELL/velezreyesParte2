@@ -64,12 +64,12 @@ def execute_query():
 # Route for executing a query based on POSTed JSON
 @app.route('/querysearch', methods=['POST'])
 def post_query():
-    print(f"request.data: {request.data}")  # Debugging print statement
-    print(f"request.headers: {request.headers}")  # Debugging print statement
+
+
     json_input = request.get_json()
-    print(f"json_input: {json_input}")  # Debugging print statement
+
     query = create_query(json_input)
-    print(f"query: {query}")  # Debugging print statement
+
     query_job = client.query(query)  
     results = []
     for row in query_job:
@@ -79,4 +79,4 @@ def post_query():
 
 # Main entry point
 if __name__ == '__main__':
-    app.run(port=3001)
+    app.run(host='0.0.0.0', port=3001)

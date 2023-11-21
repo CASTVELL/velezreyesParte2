@@ -16,7 +16,7 @@ export const DropdownContext = createContext();
 
 const App = () => {
   // Create a state to store the selected value
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState('0');
 
   return (
     <Router>
