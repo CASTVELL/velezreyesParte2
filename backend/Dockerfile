@@ -15,7 +15,7 @@ WORKDIR /home
 EXPOSE 3000
 
 # Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r /home/requirements.txt
 
 # Set the environment variable for Flask to run in production mode
 ENV FLASK_ENV=production
