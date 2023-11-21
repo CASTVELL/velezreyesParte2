@@ -39,7 +39,8 @@ def create_query(json_input):
         SELECT {search}, SUM(Births) AS Total_Births
         FROM `bigquery-public-data.sdoh_cdc_wonder_natality.county_natality_by_payment`
         {where_clause}
-        GROUP BY {search};
+        GROUP BY {search}
+        LiMIT 120;
     """
     return query
 
