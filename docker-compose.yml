@@ -1,24 +1,35 @@
-version: "3.9"
+version: "3"
+
 services:
-  frontendapp:
-    build: ./frontend
+
+  dbpostgres:
+    image: postgres
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - database-data:/var/lib/postgresql/data
+    env_file:
+      - ./database/database.env
     ports:
-      - "9000:9000"
-    links:
-      - backendapp
-    depends_on:
-      - backendapp
+      - "5432:5432"
+    networks:
+      - app-network
+    container_name: postgresqldatabase_service
 
   backendapp:
     build: ./backend
     ports:
-      - "5000:5000"
+      - "3000:3000"
+    networks:
+      - app-network
     environment:
       - DB_HOST=dbpostgres
     depends_on:
       - dbpostgres
+    container_name: backendcrudposgresql_service
 
-  dbpostgres:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: example
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  database-data:
