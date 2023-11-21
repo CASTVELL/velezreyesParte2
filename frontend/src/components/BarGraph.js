@@ -1,37 +1,49 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import React, { useEffect, useRef } from 'react';
+import Chart from 'chart.js/auto';
 
-function BarGraph({ data }) {
-    const labels = data.results.map(item => Object.values(item)[0]);
-    const dataset = data.results.map(item => Object.values(item)[1]);
+function BarGraph() {
 
-    const chartData = {
-        labels: labels,
-        datasets: [
-            {
-                label: Object.keys(data.results[0])[1],
-                //label: 'Total Births',
-                data: dataset,
-                backgroundColor: 'rgba(75,192,192,0.6)',
-                borderColor: 'rgba(75,192,192,1)',
-                borderWidth: 1
-            }
-        ]
-    };
+    const chartRef = useRef(null);
+    const chartInstanceRef = useRef(null);
 
-    const options = {
-        scales: {
-            yAxes: [
-                {
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }
-            ]
+    const data = [
+        { year: 2010, count: 10 },
+        { year: 2011, count: 20 },
+        { year: 2012, count: 15 },
+        { year: 2013, count: 25 },
+        { year: 2014, count: 22 },
+        { year: 2015, count: 30 },
+        { year: 2016, count: 28 },
+    ];
+
+    useEffect(() => {
+        if (chartInstanceRef.current) {
+            chartInstanceRef.current.destroy();
         }
-    };
+        chartInstanceRef.current = new Chart(
+            chartRef.current,
+            {
+                type: 'bar',
+                data: {
+                    labels: data.map(row => row.year),
+                    datasets: [
+                        {
+                            label: 'Total Births',
+                            data: data.map(row => row.count)
+                        }
+                    ]
+                }
+            }
+        );
+    }, []);
 
-    return <Bar data={chartData} options={options} />;
+    return (
+        <div>
+            <div style={{ width: '800px' }}>
+                <canvas ref={chartRef}></canvas>
+            </div>
+        </div>
+    );
 }
 
 export default BarGraph;

@@ -11,10 +11,10 @@ import './FilterContainer.css';
 function FilterContainer() {
 
     // State variables for selected options
-    const [selectedPaymentSource, setSelectedPaymentSource] = useState('');
-    const [selectedYear, setSelectedYear] = useState('');
-    const [selectedSearch, setSelectedSearch] = useState('');
-    const [graphData, setGraphData] = useState(null);
+    const [selectedPaymentSource, setSelectedPaymentSource] = useState('All');
+    const [selectedYear, setSelectedYear] = useState('All');
+    const [selectedSearch, setSelectedSearch] = useState('Ave_Age_of_Mother');
+
 
     // Options for each dropdown
     const paymentSourceOptions = ['All', 'Medicaid', 'Self Pay', 'Private Insurance', 'Other', 'Unknown or Not Stated'];
@@ -46,7 +46,6 @@ function FilterContainer() {
     // Handler for form submission
     const handleSubmit = async () => {
         const data = await sendDataToBackend(getDropdownValues());
-        setGraphData(data);
     };
 
     // Render
@@ -70,7 +69,7 @@ function FilterContainer() {
                 <SubmitButton label="Buscar" handleSubmit={handleSubmit} />
             </div>
             <div className="GraphContainer">
-                {graphData && <BarGraph data={graphData} />}
+                <BarGraph />
             </div>
         </div>
     );
