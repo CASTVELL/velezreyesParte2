@@ -33,10 +33,6 @@ services:
       - "3001:3001"
     networks:
       - app-network
-    environment:
-      - DB_HOST=dbpostgres
-    depends_on:
-      - dbpostgres
     container_name: backendbigquery_service
 
   reactapp_service:
