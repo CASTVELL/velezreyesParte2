@@ -1,0 +1,20 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim-buster
+
+# Set the working directory in the container to /app
+WORKDIR /
+
+# Copy requirements.txt file into the container at /app
+COPY requirements.txt /
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Add current directory files to the container at /app
+ADD . /
+
+# Make port 3001 available to the world outside this container
+EXPOSE 3001
+
+# Run server.py when the container launches
+CMD ["python", "backendBigQueryService.py"]

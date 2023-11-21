@@ -15,7 +15,7 @@ services:
       - app-network
     container_name: postgresqldatabase_service
 
-  backendapp:
+  crudposgresql_service:
     build: ./backend
     ports:
       - "3000:3000"
@@ -26,6 +26,29 @@ services:
     depends_on:
       - dbpostgres
     container_name: backendcrudposgresql_service
+
+  bigqueryservice:
+    build: ./bigquery_service
+    ports:
+      - "3001:3001"
+    networks:
+      - app-network
+    environment:
+      - DB_HOST=dbpostgres
+    depends_on:
+      - dbpostgres
+    container_name: backendbigquery_service
+
+  reactapp_service:
+    build: ./frontend
+    ports:
+      - "9000:9000"
+    networks:
+      - app-network
+    depends_on:
+      - crudposgresql_service
+      - bigqueryservice
+    container_name: frontendreactapp_service
 
 networks:
   app-network:
