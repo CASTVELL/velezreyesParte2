@@ -175,6 +175,7 @@ def comment_detail(comment_id):
 
 
 # Run app
+# port 3000 es el puerto que se expone en el docker-compose
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port= 3000, debug=True)
